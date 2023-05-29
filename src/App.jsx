@@ -1,9 +1,19 @@
 // import { useState } from 'react'
+import { useEffect } from 'react';
 import './App.css'
+import axios from 'axios';
 
 function App() {
   //const [count, setCount] = useState(0)
 
+
+  useEffect(() => {
+    axios.get('')
+    .then(res => {
+      console.log(res.data)
+    })
+  }, [])
+  
   const handleSubmit = (e) => {
     e.preventDefault();
   }
@@ -26,15 +36,15 @@ function App() {
       {/* Basic Informations */}
 
         <div>
-          <label>Kategoria motoryzacja: </label>
+          <label>Glowna kategoria: </label>
           <input id="cat1_id" type="number" defaultValue={1}/>
         </div>
         <div>
-          <label>Kategoria samochody: </label>
+          <label>Podkategoria: </label>
           <input id="cat2_id" type="number" defaultValue={2}/>
         </div>
         <div>
-          <label>Marka samochodu: </label>
+          <label>Kategoria trzeciego rzedu: </label>
           <select id="cat3_id">
             <option value={0}>Toyota</option>
             <option value={1}></option>
@@ -43,10 +53,6 @@ function App() {
             <option value={4}></option>
             <option value={5}></option>
           </select>
-        </div>
-        <div>
-          <label>miasto: </label>
-          <input id="city_id" type="number" defaultValue={4}/>
         </div>
         <div>
           <label>rodzaj ogloszenia</label>
@@ -66,13 +72,9 @@ function App() {
         </div>
 
         <div>
-          <label>Pierwsze zdjecie: </label>
+          <label>Zdjecie: </label>
           <input type='file'></input>
         </div>  
-        <div>
-          <label>Drugie zdjecie: </label>
-          <input type='file'></input>
-        </div> 
 
 
         <button type="submit">Wyslij</button>
