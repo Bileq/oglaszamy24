@@ -11,5 +11,21 @@ Czyli aplikacja która będzie dodawała ogłoszenie, gdzie trzeba będzie uzupe
  1. Form w reactcie
  2. obsluga api
  3. mechanizm odnawiania ogloszen
- 4. git
+                                                    4. git
  5. obsluzyc stale dane 
+
+
+Form fields: 
+
+mororyzacja -> samochody -> [rodzaj samochodu(toyota)]
+
+
+
+
+Dane stale:
+
+    dane kontaktowe
+
+    Imie i nazwisko
+    telefon
+    email: 
