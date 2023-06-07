@@ -5,11 +5,10 @@
   /* text-align: center; */
   align-content: center;
 }
+body{
+  color: white;
+  background-color: black;
+}
 #description {
   margin-top: auto;
-}
-.page{
-}
-div{
-  padding: 10px 0;
 }
