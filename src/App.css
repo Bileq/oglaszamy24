@@ -12,3 +12,6 @@ body{
 #description {
   margin-top: auto;
 }
+#prompt {
+  padding-top: 50px;
+}
