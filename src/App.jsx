@@ -2,22 +2,26 @@ import "./App.css";
 import { useState, useEffect } from "react";
 
 function App() {
-  const [mainCategory, appendMainCategory] = useState([]);
-  const [isLoaded, appendIsLoaded] = useState(false);
-  const [subCategory, appendSubCategory] = useState([]);
-  const [name, appendName] = useState("Jakub Siębor");
-  const [phone, appendPhone] = useState(123456789);
-  const [catOne, appendCatOne] = useState(13);
-  const [catTwo, appendCatTwo] = useState(80);
-  const [catThree, appendCatThree] = useState(0);
-  const [city, appendCity] = useState(0);
-  const [adType, appendAdType] = useState(1);
-  const [title, appendTitle] = useState("Example title");
-  const [desc, appendDesc] = useState(
-    "This text is an example description that is used to describe the thing that is being sold"
+  const [mainCategory, setMainCategory] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [subCategory, setSubCategory] = useState([]);
+  const [name, setName] = useState("Roman Zadymka");
+  const [phone, setPhone] = useState(123456789);
+  const [catOne, setCatOne] = useState(13);
+  const [catTwo, setCatTwo] = useState(80);
+  const [catThree, setCatThree] = useState(0);
+  const [city, setCity] = useState(0);
+  const [adType, setAdType] = useState(1);
+  const [title, setTitle] = useState("Lorem Ipsum");
+  // const [desc, setDesc] = useState(
+  //   "This text is an example description that is used to describe the thing that is being sold"
+  // );
+  const [desc, setDesc] = useState(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
   );
-  const [photo, appendPhoto] = useState([]);
+  const [photo, setPhoto] = useState([]);
   const [prompt, setPrompt] = useState();
+  const [adID, setAdId] = useState();
 
   const apiKey = "BDc4JU6zygD3NDiV31ifniVDHoCClu5c";
   const urlCats = "http://localhost:3000/api/categories";
@@ -32,18 +36,23 @@ function App() {
     const fetchAPI = async () => {
       const res = await fetch(urlCats, options);
       const data = await res.json();
-      appendMainCategory(data.data.categories["Nauka i książki"].catOne);
-      appendSubCategory(
+      setMainCategory(data.data.categories["Nauka i książki"].catOne);
+      setSubCategory(
         data.data.categories["Nauka i książki"].subcategories[
           "Książki i podręczniki"
         ].catTwo
       );
-      appendIsLoaded(true);
+      setIsLoaded(true);
     };
 
     fetchAPI().catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setPhoto(file);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,24 +69,41 @@ function App() {
       ad_type: adType,
     };
 
-
     const requestOptions = {
       method: "POST",
+      // TODO:
       headers: {
-        "API-Key": apiKey,
-        "Content-Type": "application/x-www-form-urlencoded",
+          "API-Key": apiKey,
+          "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({ data: JSON.stringify(data) }),
     };
-
+    // TODO:
     fetch("http://localhost:3000/api/adverts", requestOptions)
-    // fetch('https://jsonplaceholder.typicode.com/posts', requestOptions)
+    // fetch("https://jsonplaceholder.typicode.com/posts", requestOptions)
       .then((response) => response.json())
-      //Send this to a div
-      .then(data => {
-        console.log(data)
+      .then((data) => {
+        // TODO:
         setPrompt(Object.values(data))
-      })
+        setAdId(Object.values(data));
+        console.log(data.id)
+
+        const uploadID = Object.values(data)
+
+
+        fetch(`http://localhost:3000/api/adverts/${uploadID[2].id}/images/upload`,
+        {
+          method: "POST",
+          body: photo,
+          // TODO:
+          headers: {
+              "API-Key": apiKey,
+              "Content-Type": "application/x-www-form-urlencoded",
+          }
+          
+        })
+
+      });
   };
 
   if (!isLoaded) {
@@ -95,7 +121,7 @@ function App() {
               value={name}
               id="contact_name"
               type="string"
-              onChange={(e) => appendName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div>
@@ -105,7 +131,7 @@ function App() {
               value={phone}
               id="telephone"
               type="integer"
-              onChange={(e) => appendPhone(e.target.value)}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
@@ -118,7 +144,7 @@ function App() {
               value={catOne}
               id="cat1_id"
               type="number"
-              onChange={(e) => appendCatOne(e.target.value)}
+              onChange={(e) => setCatOne(e.target.value)}
             />
           </div>
           <div>
@@ -128,7 +154,7 @@ function App() {
               value={catTwo}
               id="cat2_id"
               type="number"
-              onChange={(e) => appendCatTwo(e.target.value)}
+              onChange={(e) => setCatTwo(e.target.value)}
             />
           </div>
           <div>
@@ -138,7 +164,7 @@ function App() {
               value={catThree}
               id="cat3_id"
               type="number"
-              onChange={(e) => appendCatThree(e.target.value)}
+              onChange={(e) => setCatThree(e.target.value)}
             />
           </div>
           <div>
@@ -147,7 +173,7 @@ function App() {
               value={city}
               id="city_id"
               type="number"
-              onChange={(e) => appendCity(e.target.value)}
+              onChange={(e) => setCity(e.target.value)}
             />
           </div>
           <div>
@@ -157,7 +183,7 @@ function App() {
               value={adType}
               id="ad_type"
               type="integer"
-              onChange={(e) => appendAdType(e.target.value)}
+              onChange={(e) => setAdType(e.target.value)}
             />
           </div>
           <div>
@@ -168,7 +194,7 @@ function App() {
               id="title"
               type="string"
               min={5}
-              onChange={(e) => appendTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div id="divdesc">
@@ -178,20 +204,21 @@ function App() {
               value={desc}
               id="description"
               max={4000}
-              onChange={(e) => appendDesc(e.target.value)}
+              onChange={(e) => setDesc(e.target.value)}
             ></textarea>
           </div>
           <div>
             <label>Zdjecie: </label>
             <input
               type="file"
-              value={photo}
-              onChange={(e) => appendPhoto(e.target.value)}
+              accept="image/jpg"
+              onChange={handleImageChange}
             ></input>
           </div>
 
           <button type="submit">Wyslij</button>
         </form>
+        {/* TODO: */}
         <div>{prompt && <div id="prompt">{prompt[1]}</div>}</div>
       </div>
     );
