@@ -13,15 +13,13 @@ function App() {
   const [city, setCity] = useState(0);
   const [adType, setAdType] = useState(1);
   const [title, setTitle] = useState("Lorem Ipsum");
-  // const [desc, setDesc] = useState(
-  //   "This text is an example description that is used to describe the thing that is being sold"
-  // );
   const [desc, setDesc] = useState(
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
   );
-  const [photo, setPhoto] = useState([]);
+  const [photo, setPhoto] = useState();
   const [prompt, setPrompt] = useState();
   const [adID, setAdId] = useState();
+  const [photoPrompt, setPhotoPrompt] = useState();
 
   const apiKey = "BDc4JU6zygD3NDiV31ifniVDHoCClu5c";
   const urlCats = "http://localhost:3000/api/categories";
@@ -49,9 +47,8 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setPhoto(file);
+  const handleImageChange = e => {
+    setPhoto(e.target.files[0])
   };
 
   const handleSubmit = (e) => {
@@ -74,7 +71,6 @@ function App() {
       // TODO:
       headers: {
           "API-Key": apiKey,
-          "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({ data: JSON.stringify(data) }),
     };
@@ -86,25 +82,38 @@ function App() {
         // TODO:
         setPrompt(Object.values(data))
         setAdId(Object.values(data));
-        console.log(data.id)
-
-        const uploadID = Object.values(data)
-
-
-        fetch(`http://localhost:3000/api/adverts/${uploadID[2].id}/images/upload`,
-        {
-          method: "POST",
-          body: photo,
-          // TODO:
-          headers: {
-              "API-Key": apiKey,
-              "Content-Type": "application/x-www-form-urlencoded",
-          }
-          
-        })
-
-      });
+      })
+      .catch(err => console.log(err))
   };
+
+  const handleImageUpload = e => {
+    e.preventDefault()
+
+      const formData = new FormData();
+      formData.append('data', photo)
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "API-Key": apiKey,
+        },
+        body: formData,
+      }
+
+    // fetch(`http://localhost:3000/api/adverts/${adID[1]}/images/upload`, requestOptions)
+    // TODO: Correct version :
+    fetch(`http://localhost:3000/api/adverts/${adID[2].id}/images/upload`, requestOptions)
+    // fetch(`http://localhost:3000/api/adverts/2006238162/images/upload`, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      setPhotoPrompt(Object.values(data))
+    })
+    .catch(err => console.log(err))
+
+
+  }
+
 
   if (!isLoaded) {
     return <div>Loading...</div>;
@@ -207,7 +216,19 @@ function App() {
               onChange={(e) => setDesc(e.target.value)}
             ></textarea>
           </div>
-          <div>
+          
+
+          <button type="submit" style={{marginTop: "10px"}}>Wyslij</button>
+        </form>
+        {/* TODO: */}
+        <div>{prompt && <div id="prompt">{prompt[1]}</div>}</div>
+
+      {
+        adID && 
+        <form 
+          onSubmit={handleImageUpload} id="photoForm">
+          <h3>Dodaj zdjecie do poprzednio wyslanego ogloszenia:</h3>
+        <div>
             <label>Zdjecie: </label>
             <input
               type="file"
@@ -215,11 +236,11 @@ function App() {
               onChange={handleImageChange}
             ></input>
           </div>
-
-          <button type="submit">Wyslij</button>
+          <button type="submit" style={{marginTop: "20px"}}>Wyslij zdjecie</button>
         </form>
-        {/* TODO: */}
-        <div>{prompt && <div id="prompt">{prompt[1]}</div>}</div>
+      }
+
+      <div>{photoPrompt && <div id="photoPrompt">{photoPrompt[1]}</div>}</div>
       </div>
     );
   }

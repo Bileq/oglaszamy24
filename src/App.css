@@ -13,5 +13,11 @@ body{
   margin-top: auto;
 }
 #prompt {
-  padding-top: 50px;
+  padding-top: 30px;
+}
+#photoForm {
+  padding-top: 20px;
+}
+#photoPrompt {
+  padding-top: 30px;
 }
